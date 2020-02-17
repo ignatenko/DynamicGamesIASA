@@ -1,0 +1,457 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Стратегії гравців і їх корисність. Чисті і змішані стратегії. Рівновага в змішаних стратегіях.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## Визначення змішаних стратегій\n",
+    "\n",
+    "\n",
+    "> Змішана стратегія гравця $i$ з множиною стратегій $S_i$ позначається $\\sigma_i \\in [0,1]_{\\mathbb{R}}^{|S_i|}$ та відповідає ймовірносному розподілу на просторі чистих стратегій.\n",
+    "\n",
+    "Тобто виконується: \n",
+    "\n",
+    "$$\n",
+    "\\sum_{i=1}^{|S_i|}\\sigma_i = 1\n",
+    "$$\n",
+    "\n",
+    "---\n",
+    "\n",
+    "Очікуваний виграш гравця є мірою розподілу ймовірності.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## Обчислення корисності стратегії\n",
+    "\n",
+    "Розглянемо гру \n",
+    "$(A, B)\\in\\mathbb{{R^{m \\times n}}^2}$, і нехай $\\sigma_r$ та $\\sigma_c$ - це змішані стратегії для першого і другого гравця відповідно. Тоді гравці отримають наступні виграші: \n",
+    "\n",
+    "$$\n",
+    "u_r(\\sigma_r, \\sigma_c) = \\sum_{i=1}^m\\sum_{j=1}^nA_{ij}{\\sigma_r}_i{\\sigma_c}_j\n",
+    "$$\n",
+    "\n",
+    "та:\n",
+    "\n",
+    "$$\n",
+    "u_c(\\sigma_r, \\sigma_c) = \\sum_{i=1}^m\\sum_{j=1}^nB_{ij}{\\sigma_r}_i{\\sigma_c}_j\n",
+    "$$\n",
+    "\n",
+    "Це випливає з того, що:\n",
+    "\n",
+    "- Ймовірність опинитись в певній клітинці  $A$ або $B$: ${\\sigma_r}_i{\\sigma_c}_j$\n",
+    "- Значення виграшу в клітинці дорівнює: $A_{ij}$ або $B_{ij}$\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## Розглянемо декілька прикладів.\n",
+    "\n",
+    "### Орлянка\n",
+    "\n",
+    "Гра визначається наступними матрицями:\n",
+    "\n",
+    "$$\n",
+    "A =\n",
+    "\\begin{pmatrix}\n",
+    "    1 & -1\\\\\n",
+    "    -1 & 1\n",
+    "\\end{pmatrix}\\qquad\n",
+    "B =\n",
+    "\\begin{pmatrix}\n",
+    "    -1 & 1\\\\\n",
+    "    1 & -1\n",
+    "\\end{pmatrix}\n",
+    "$$\n",
+    "\n",
+    "Проаналізуємо цю гру. Позначимо найкращі відповіді:\n",
+    "\n",
+    "$$\n",
+    "A =\n",
+    "\\begin{pmatrix}\n",
+    "    1^* & -1\\\\\n",
+    "    -1 & 1^*\n",
+    "\\end{pmatrix}\\qquad\n",
+    "B =\n",
+    "\\begin{pmatrix}\n",
+    "    -1 & 1^*\\\\\n",
+    "    1^* & -1\n",
+    "\\end{pmatrix}\n",
+    "$$\n",
+    "\n",
+    "Отже рівноваги в чистих стратегіях немає. \n",
+    "\n",
+    "Припустимо, що гравці вибрали такі змішані стратегії:\n",
+    "\n",
+    "$$\n",
+    "\\sigma_r = (.2, .8)\n",
+    "\\qquad\n",
+    "\\sigma_c = (.6, .4)\n",
+    "$$\n",
+    "\n",
+    "Тоді виграші будуть рівні:\n",
+    "\n",
+    "$$\n",
+    "u_r(\\sigma_r, \\sigma_c) = 0.2 \\times 0.6 \\times 1 + 0.2 \\times 0.4 \\times (-1) + 0.8 \\times 0.6 \\times (-1) + 0.8 \\times 0.4 \\times 1=-0.12,\n",
+    "$$\n",
+    "\n",
+    "$$\n",
+    "u_c(\\sigma_r, \\sigma_c) = 0.2 \\times 0.6 \\times (-1) + 0.2 \\times 0.4 \\times 1 + 0.8 \\times 0.6 \\times 1 + 0.8 \\times 0.4 \\times (-1)=0.12.\n",
+    "$$\n",
+    "\n",
+    "---\n",
+    "\n",
+    "### Гра лоббіювання\n",
+    "\n",
+    "$$\n",
+    "A =\n",
+    "\\begin{pmatrix}\n",
+    "    -5 & 25\\\\\n",
+    "    0 & 10\n",
+    "\\end{pmatrix}\\qquad\n",
+    "B =\n",
+    "\\begin{pmatrix}\n",
+    "    -5 & 0\\\\\n",
+    "    15 & 10\n",
+    "\\end{pmatrix}\n",
+    "$$\n",
+    "\n",
+    "Знайти найкращі відповіді і рівноваги Неша.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## Лінійні перетворення\n",
+    "\n",
+    "Зауважимо, що ми можемо перекомпонувати вирази для корисностей:\n",
+    "\n",
+    "$$\n",
+    "u_r(\\sigma_r, \\sigma_c) = \\sum_{i=1}^m{\\sigma_r}_i\\sum_{j=1}^nA_{ij}{\\sigma_c}_j\n",
+    "$$\n",
+    "\n",
+    "$$\n",
+    "u_c(\\sigma_r, \\sigma_c) = \\sum_{i=1}^m{\\sigma_r}_i\\sum_{j=1}^nB_{ij}{\\sigma_c}_j\n",
+    "$$\n",
+    "\n",
+    "що, в свою чергу, приводить до наступного добутку матриць\n",
+    "\n",
+    "$$\n",
+    "u_r(\\sigma_r, \\sigma_c) = {\\sigma_r}A\\sigma_c^T\n",
+    "$$\n",
+    "\n",
+    "$$\n",
+    "u_c(\\sigma_r, \\sigma_c) = {\\sigma_r}B\\sigma_c^T\n",
+    "$$\n",
+    "\n",
+    "Давайте перевіримо програмуванням."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "(-0.11088900000000002, 0.11088900000000002)"
+      ]
+     },
+     "execution_count": 11,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import numpy as np\n",
+    "A = np.array([[1, -1], [-1, 1]])\n",
+    "B = np.array([[-1, 1], [1, -1]])\n",
+    "sigma_r = np.array([.2, .8])\n",
+    "sigma_c = np.array([.6, .4])\n",
+    "np.dot(sigma_r, np.dot(A, sigma_c)), np.dot(sigma_r, np.dot(B, sigma_c))\n",
+    "\n",
+    "sigma_r = np.array([.333, .666])\n",
+    "sigma_c = np.array([.666, .333])\n",
+    "np.dot(sigma_r, np.dot(A, sigma_c)), np.dot(sigma_r, np.dot(B, sigma_c))\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Тепер використаємо nashpy"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Collecting nashpy\n",
+      "  Downloading https://files.pythonhosted.org/packages/ad/a2/5d36744511640db1869029d2ab324b55f6eaaa2a51f75a87408a7e8000f4/nashpy-0.0.19.tar.gz\n",
+      "Requirement already satisfied: numpy>=1.12.1 in /Users/anymac/opt/anaconda3/lib/python3.7/site-packages (from nashpy) (1.17.2)\n",
+      "Requirement already satisfied: scipy>=0.19.0 in /Users/anymac/opt/anaconda3/lib/python3.7/site-packages (from nashpy) (1.3.1)\n",
+      "Building wheels for collected packages: nashpy\n",
+      "  Building wheel for nashpy (setup.py) ... \u001b[?25ldone\n",
+      "\u001b[?25h  Created wheel for nashpy: filename=nashpy-0.0.19-cp37-none-any.whl size=10814 sha256=46b62791f0c4a472bfb28e1deecba9ff7e29663f2bc81049276e9e7db3c5c88b\n",
+      "  Stored in directory: /Users/anymac/Library/Caches/pip/wheels/18/e9/56/2d04d01a6969d167f86d3afcb3d128c0b43d0d73ea471c835b\n",
+      "Successfully built nashpy\n",
+      "Installing collected packages: nashpy\n",
+      "Successfully installed nashpy-0.0.19\n",
+      "Note: you may need to restart the kernel to use updated packages.\n"
+     ]
+    }
+   ],
+   "source": [
+    "pip install nashpy"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([-0.12,  0.12])"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import nashpy as nash\n",
+    "matching_pennies = nash.Game(A, B)\n",
+    "matching_pennies[sigma_r, sigma_c]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Заведемо гру лобіювання"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 36,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "[(array([1., 0.]), array([0., 1.])),\n",
+       " (array([0., 1.]), array([1., 0.])),\n",
+       " (array([0.5, 0.5]), array([0.75, 0.25]))]"
+      ]
+     },
+     "execution_count": 36,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import nashpy as nash\n",
+    "A = np.array([[-5, 25], [0, 10]])\n",
+    "B = np.array([[-5, 0], [15, 10]])\n",
+    "lobbying_game = nash.Game(A, B)\n",
+    "sigma_r = np.array([0.5, 0.5])\n",
+    "sigma_c = np.array([.75, .25])\n",
+    "lobbying_game[sigma_r, sigma_c]\n",
+    "game = nash.Game(A,B)\n",
+    "list(game.support_enumeration())"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "Як пояснити цей результат?\n",
+    "Задачі.\n",
+    "1. Знайти рівновагу Неша в змішаних стратегіях в грі лобіювання. \n",
+    "\n",
+    "2. Завести і проаналізувати гру камінь-ножиці-папір. Знайти рівноваги. \n",
+    "\n",
+    "3. Завести гру з Теорії Великого Вибуху https://the-big-bang-theory.com/rock-paper-scissors-lizard-spock/ \n",
+    "та спробувати знайти рівновагу.    \n",
+    "    \n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Раціоналізація\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## Визначення строго домінованої стратегії\n",
+    "\n",
+    "\n",
+    "В біматричній грі $(A, B)\\in\\mathbb{{R^{m \\times n}}^2}$ стратегія $s$ називається _домінованою_ стратегією  $\\bar s$, якщо для всіх стратегій іншого гравця $t$:\n",
+    "\n",
+    "$$\n",
+    "u(s, t) < u(\\bar s, t)\n",
+    "$$\n",
+    "\n",
+    "---\n",
+    "\n",
+    "Зокрема розглянемо дилему ув'язненого:\n",
+    "\n",
+    "$$\n",
+    "A =\n",
+    "\\begin{pmatrix}\n",
+    "    3 & 0\\\\\n",
+    "    5 & 1\n",
+    "\\end{pmatrix}\\qquad\n",
+    "B =\n",
+    "\\begin{pmatrix}\n",
+    "    3 & 5\\\\\n",
+    "    0 & 1\n",
+    "\\end{pmatrix}\n",
+    "$$\n",
+    "\n",
+    "- можна побачити, що $A_{2j} > A_{1j}$ для всіх $j$, отже перша стратегія першого гравця домінована по відношенню до другої.\n",
+    "- можна побачити, що $B_{i2} > B_{i1}$ для всіх $i$, отже перша стратегія другого гравця домінована по відношенню до другої.\n",
+    "\n",
+    "---\n",
+    "\n",
+    "## Слабо доміновані стратегії\n",
+    "\n",
+    "\n",
+    "В біматричній грі $(A, B)\\in\\mathbb{{R^{m \\times n}}^2}$ стратегія $s$ називається _слабо домінованою_ стратегією  $\\bar s$, якщо для всіх стратегій іншого гравця $t$:\n",
+    "\n",
+    "$$\n",
+    "u(s, t) \\leq u(\\bar s, t)\n",
+    "$$\n",
+    "\n",
+    "**та існує ** стратегія $t'$ така, що:\n",
+    "\n",
+    "$$\n",
+    "u(s, t') < u(\\bar s, t')\n",
+    "$$\n",
+    "\n",
+    "---\n",
+    "\n",
+    "Наприклад, розглянемо модифіковану версію попередньої гри:\n",
+    "\n",
+    "$$\n",
+    "A =\n",
+    "\\begin{pmatrix}\n",
+    "    3 & 0\\\\\n",
+    "    3 & 1\n",
+    "\\end{pmatrix}\\qquad\n",
+    "B =\n",
+    "\\begin{pmatrix}\n",
+    "    3 & 3\\\\\n",
+    "    0 & 1\n",
+    "\\end{pmatrix}\n",
+    "$$\n",
+    "\n",
+    "- видно, що $A_{2j} \\geq A_{1j}$ для всіх $j$ **і** $A_{22} > A_{12}$, отже перша стратегія слабо домінована другою.\n",
+    "- видно, що $B_{i2} \\geq B_{i1}$ для всіх $i$ **і** $B_{22} > B_{21}$, отже перша стратегія слабо домінована другою.\n",
+    "\n",
+    "Перевіримо умови домінування\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import numpy as np\n",
+    "A = np.array([[3, 0], [3, 1]])\n",
+    "B = np.array([[3, 3], [0, 1]])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verify that first row is weakly dominated by second row\n",
+    "all(A[0,:] <= A[1,:]) and any(A[0,:] < A[1,:])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "True"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Verify that first column is weakly dominated by second column\n",
+    "all(B[:,0] <= B[:,1]) and any(B[:,0] < B[:,1])"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Задачі\n",
+    "\n",
+    "1. Splitting Pizza: You and a friend are in an Italian restaurant, and the owner offers both of you a free eight-slice pizza under the following condition. Each of you must simultaneously announce how many slices you would like; that is, each player i ∈ {1, 2} names his desired amount of pizza, 0 ≤ si ≤ 8. If s1 + s2 ≤ 8 then the players get their demands (and the owner eats any leftover slices). If s1 + s2 > 8, then the players get nothing. Assume that you each care only about how much pizza you individually consume, and the more the better.\n",
+    "    a. Write out or graph each player’s best-response correspondence.\n",
+    "    b. What outcomes can be supported as pure-strategy Nash equilibria?\n",
+    "    \n",
+    "2. Гра розміщення і її варіанти. "
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.4"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
